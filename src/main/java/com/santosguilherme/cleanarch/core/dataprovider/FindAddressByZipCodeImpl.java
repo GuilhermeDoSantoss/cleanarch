@@ -17,8 +17,13 @@ public class FindAddressByZipCodeImpl implements FindAddressByZipCode {
     private AddressResponseMapper addressResponseMapper;
 
     @Override
-    public Address fin(String zipCode) {
+    public Address find(String zipCode) {
         var addressResponse = findAddressByZipCodeClient.find(zipCode);
         return addressResponseMapper.toAddress(addressResponse);
+    }
+
+    @Override
+    public Address fin(String zipCode) {
+        return null;
     }
 }
