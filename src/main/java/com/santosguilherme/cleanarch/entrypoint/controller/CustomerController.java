@@ -1,7 +1,9 @@
 package com.santosguilherme.cleanarch.entrypoint.controller;
 
+import com.santosguilherme.cleanarch.core.usecase.DeleteCustomerByIdUseCase;
 import com.santosguilherme.cleanarch.core.usecase.FindCustomerByIdUseCase;
 import com.santosguilherme.cleanarch.core.usecase.InsertCustomerUseCase;
+import com.santosguilherme.cleanarch.core.usecase.UpDateCustomerUseCase;
 import com.santosguilherme.cleanarch.entrypoint.controller.mapper.CustomerMapper;
 import com.santosguilherme.cleanarch.entrypoint.controller.request.CustomerRequest;
 import com.santosguilherme.cleanarch.entrypoint.controller.response.CustomerResponse;
@@ -21,7 +23,13 @@ public class CustomerController {
     private FindCustomerByIdUseCase findCustomerByIdUseCase;
 
     @Autowired
+    private UpDateCustomerUseCase upDateCustomerUseCase;
+
+    @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private DeleteCustomerByIdUseCase deleteCustomerByIdUseCase;
 
     @PostMapping
     public ResponseEntity<Void> insert(@Valid @RequestBody CustomerRequest customerRequest){
@@ -35,6 +43,21 @@ public class CustomerController {
         var customer = findCustomerByIdUseCase.find(id);
         var customerResponse = customerMapper.toCustomerResponse(customer);
         return ResponseEntity.ok().body(customerResponse);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> upadate(@PathVariable final String id,
+                                        @Valid @RequestBody CustomerRequest customerRequest) {
+        var customer = customerMapper.toCustomer(customerRequest);
+        customer.setId(id);
+        upDateCustomerUseCase.update(customer, customerRequest.getZipCode());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable final String id){
+        deleteCustomerByIdUseCase.delete(id);
+        return ResponseEntity.noContent().build();
 
     }
 }
