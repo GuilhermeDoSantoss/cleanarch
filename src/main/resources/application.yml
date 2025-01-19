@@ -1,0 +1,6 @@
+spring.application.name=cleanarch
+
+guilherme-santos:
+  client:
+    address:
+      url: http://localhost:8082/address
